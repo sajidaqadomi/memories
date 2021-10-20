@@ -8,9 +8,26 @@ export default makeStyles((theme) => ({
     heading: {
         marginRight: 15,
         color: "rgba(0,183,255, 1)",
+        textDecoration: "none"
+    },
+    logo: {
+        flex: 1,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+
+
+    },
+    name: {
+        marginRight: theme.spacing(3),
+        marginLeft: theme.spacing(3),
+
     },
     toolbar: {
-        alignItems: "center",
-        justifyContent: "center",
+
     },
+    profile: {
+        display: 'flex',
+        alignItems: 'center'
+    }
 }));

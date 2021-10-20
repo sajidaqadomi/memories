@@ -7,16 +7,25 @@ import {
     Typography,
 } from "@material-ui/core";
 import React from "react";
-import { ThumbUp, Delete, MoreHoriz } from "@material-ui/icons";
+import {
+    ThumbUp,
+    ThumbUpAltOutlined,
+    Delete,
+    MoreHoriz,
+} from "@material-ui/icons";
+
 import moment from "moment";
 
 import useStyles from "./styles";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import * as actions from "../../../actions/posts";
 
 const Post = ({ post, setCurrentId }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
+
+    const { user } = useSelector((state) => state.authData);
+    console.log(user, post, "in post");
 
     const deletePost = (id) => {
         dispatch(actions.deletePost(id));
@@ -24,6 +33,29 @@ const Post = ({ post, setCurrentId }) => {
 
     const likePost = (id) => {
         dispatch(actions.likePost(id));
+    };
+
+    const Like = () => {
+        const likeCount = post.likes.length;
+        const likeIndex = post.likes.findIndex(
+            (like) => like === user?._id || like === user?.googleId
+        );
+        console.log(likeCount, likeIndex, 'countindex')
+        if (likeCount >= 1) {
+            return likeIndex >= 0 ? (
+                <> <ThumbUp fontSize="small" />&nbsp;
+                    {likeCount <= 2
+                        ? `${likeCount}like${likeCount === 1 ? "" : "s"}`
+                        : `you and ${likeCount - 1} other`}</>
+
+
+            ) : (
+                <> <ThumbUpAltOutlined fontSize="small" /> &nbsp;{`${likeCount} Like${likeCount === 1 ? '' : 's'}`}</>
+
+
+            );
+        }
+        return <><ThumbUpAltOutlined fontSize="small" />&nbsp;Like </>;
     };
 
     return (
@@ -35,12 +67,15 @@ const Post = ({ post, setCurrentId }) => {
                     <Typography>{moment(post.createdAt).fromNow()}</Typography>
                 </div>
                 <div>
-                    <Button
-                        className={classes.moreBtn}
-                        onClick={() => setCurrentId(post._id)}
-                    >
-                        <MoreHoriz fontSize="small" />
-                    </Button>
+                    {(user?.googleId === post.creatorId ||
+                        user?._id === post.creatorId) && (
+                            <Button
+                                className={classes.moreBtn}
+                                onClick={() => setCurrentId(post._id)}
+                            >
+                                <MoreHoriz fontSize="small" />
+                            </Button>
+                        )}
                 </div>
             </div>
             <div className={classes.details}>
@@ -62,16 +97,24 @@ const Post = ({ post, setCurrentId }) => {
                 </Typography>
             </CardContent>
             <CardActions className={classes.actions}>
-                <Button color="primary" size="small" onClick={() => likePost(post._id)}>
-                    <ThumbUp fontSize="small" /> &nbsp;LIKE&nbsp; {post.likeCount}
-                </Button>
                 <Button
-                    color="secondary"
+                    color="primary"
                     size="small"
-                    onClick={() => deletePost(post._id)}
+                    disabled={!(user?.googleId || user?._id)}
+                    onClick={() => likePost(post._id)}
                 >
-                    <Delete fontSize="small" /> DELETE
+                    <Like />
                 </Button>
+                {(user?.googleId === post.creatorId ||
+                    user?._id === post.creatorId) && (
+                        <Button
+                            color="secondary"
+                            size="small"
+                            onClick={() => deletePost(post._id)}
+                        >
+                            <Delete fontSize="small" /> DELETE
+                        </Button>
+                    )}
             </CardActions>
         </Card>
     );

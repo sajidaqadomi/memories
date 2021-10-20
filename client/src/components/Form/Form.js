@@ -9,11 +9,14 @@ import useStyles from "./styles";
 import FormInput from "./FormInput";
 
 const Form = ({ currentId, setCurrentId }) => {
+    const authData = useSelector(state => state.authData)
     const posts = useSelector((state) => state.posts);
+
+    console.log(authData, 'user')
 
     const methods = useForm({
         defaultValues: {
-            creator: "",
+
             title: "",
             message: "",
             tags: "",
@@ -58,10 +61,18 @@ const Form = ({ currentId, setCurrentId }) => {
 
     const onSubmit = (data) => {
         currentId
-            ? dispatch(updatePost(currentId, { ...data, tags: data.tags.split(",") }))
-            : dispatch(createPost({ ...data, tags: data.tags.split(",") }));
+            ? dispatch(updatePost(currentId, { ...data, creator: authData?.user?.name, tags: data.tags.split(",") }))
+            : dispatch(createPost({ ...data, creator: authData?.user?.name, tags: data.tags.split(",") }));
         clear();
     };
+
+    if (!authData?.user?.name) return (
+        <Paper className={classes.paper}>
+            <Typography variant='h6' align='center'>
+                Please Sign In to create your own memories and react with other's memories.
+            </Typography>
+        </Paper>
+    )
 
     return (
         <Paper variant="elevation" className={classes.paper}>
@@ -74,7 +85,7 @@ const Form = ({ currentId, setCurrentId }) => {
                         {currentId ? `Editing a Memory ` : `Creating a Memory`}
                     </Typography>
 
-                    <FormInput name="creator" label="Creator" />
+                    {/* <FormInput name="creator" label="Creator" /> */}
                     <FormInput name="title" label="Title" />
                     <FormInput name="message" label="Message" multiline rows={4} />
                     <FormInput name="tags" label="Tags ((coma separated))" />
