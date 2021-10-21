@@ -1,9 +1,11 @@
 import axios from 'axios'
 import storage from '../auth/storage'
 
-const API = axios.create({ baseURL: 'http://localhost:5000' });
-//const url = 'http://localhost:5000'
-//const url = 'https://memories-reac.herokuapp.com/posts'
+
+const url = 'http://localhost:5000'
+//const url = 'https://memories-reac.herokuapp.com'
+const API = axios.create({ baseURL: url });
+
 API.interceptors.request.use((req) => {
     if (storage.getToken()) {
         console.log(storage.getToken())

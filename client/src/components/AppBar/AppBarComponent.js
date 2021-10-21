@@ -1,6 +1,7 @@
 import { AppBar, Avatar, Button, Toolbar, Typography } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router";
 import { Link } from "react-router-dom"
 import jwt_decode from "jwt-decode";
 
@@ -10,6 +11,7 @@ import useStyles from "./styles";
 
 const AppBarComponent = () => {
   const classes = useStyles();
+  const location = useLocation()
   const { user, token } = useSelector((state) => state.authData)
   const dispatch = useDispatch()
 
@@ -18,13 +20,13 @@ const AppBarComponent = () => {
 
   }
 
-  useEffect(() => {//need to solve
+  useEffect(() => {
     if (token) {
       let decode = jwt_decode(token)
       console.log(decode)
       if (decode.exp * 1000 < new Date().getTime()) logout()
     }
-  }, [token]);
+  }, [location, token]);
 
   return (
     <AppBar position="static" color="inherit" className={classes.appBar}>
@@ -38,7 +40,7 @@ const AppBarComponent = () => {
         <div className={classes.profile}>
           {user ? (
             <>
-              <Avatar size='small'>{user.name?.charAt(0) || user.email.charAt(0)}</Avatar>
+              <Avatar size='small' className={classes.userAvater}>{user.name?.charAt(0) || user.email.charAt(0)}</Avatar>
               <Typography className={classes.name}>{user.name || user.email}</Typography>
               <Button variant='contained' color='secondary' onClick={logout}>Log Out</Button>
             </>

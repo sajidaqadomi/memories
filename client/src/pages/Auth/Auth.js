@@ -32,7 +32,7 @@ const Auth = () => {
 
     useEffect(() => {
         if (token) history.push("/");
-    }, [token]);
+    }, [token, history]);
 
     const switchSignup = () => {
         setIsSignUp((signup) => !signup);
@@ -59,7 +59,7 @@ const Auth = () => {
 
     const onSubmit = (data) => {
         isSignUp
-            ? (data.password == data.repeatPassword
+            ? (data.password === data.repeatPassword
                 ? dispatch(signUp(data))
                 : console.log(`passwords not match`))
             : dispatch(signIn(data));

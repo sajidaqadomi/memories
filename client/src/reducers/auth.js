@@ -1,6 +1,4 @@
 import { AUTH, LOGOUT, RETRIEV } from "../utility/actionTypes";
-import storage from '../auth/storage'
-
 
 
 export const authReducer = (authData = { token: null, user: null }, action) => {

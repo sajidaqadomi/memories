@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/core";
+import { deepPurple } from "@material-ui/core/colors";
 
 export default makeStyles((theme) => ({
     appBar: {
@@ -21,6 +22,11 @@ export default makeStyles((theme) => ({
     name: {
         marginRight: theme.spacing(3),
         marginLeft: theme.spacing(3),
+
+    },
+    userAvater: {
+        color: theme.palette.getContrastText(deepPurple[500]),
+        backgroundColor: deepPurple[500],
 
     },
     toolbar: {
