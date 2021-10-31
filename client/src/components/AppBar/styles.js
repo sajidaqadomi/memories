@@ -14,8 +14,10 @@ export default makeStyles((theme) => ({
     logo: {
         flex: 1,
         display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        [theme.breakpoints.down('sm')]: {
+            marginBottom: theme.spacing(2)
+        }
 
 
     },
@@ -30,6 +32,11 @@ export default makeStyles((theme) => ({
 
     },
     toolbar: {
+        [theme.breakpoints.down('sm')]: {
+            flexDirection: 'column',
+            paddingTop: theme.spacing(1),
+            paddingBottom: theme.spacing(1)
+        },
 
     },
     profile: {

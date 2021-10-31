@@ -6,6 +6,11 @@ export default makeStyles((theme) => ({
             flexDirection: 'column-reverse',
         }
 
+    },
+    pagination: {
+        marginTop: theme.spacing(2),
+        borderRadius: 4,
+        padding: theme.spacing(2)
     }
 
 

@@ -1,6 +1,7 @@
 import {
     Button,
     Card,
+    CardActionArea,
     CardActions,
     CardContent,
     CardMedia,
@@ -19,6 +20,7 @@ import moment from "moment";
 import useStyles from "./styles";
 import { useDispatch, useSelector } from "react-redux";
 import * as actions from "../../../actions/posts";
+import { Link } from "react-router-dom";
 
 const Post = ({ post, setCurrentId }) => {
     const classes = useStyles();
@@ -34,6 +36,13 @@ const Post = ({ post, setCurrentId }) => {
     const likePost = (id) => {
         dispatch(actions.likePost(id));
     };
+
+    const updatePost = (e, id) => {
+        console.log(e, id, "propegation")
+        e.preventDefault()
+        e.stopPropagation()
+        setCurrentId(id)
+    }
 
     const Like = () => {
         const likeCount = post.likes.length;
@@ -59,43 +68,45 @@ const Post = ({ post, setCurrentId }) => {
     };
 
     return (
-        <Card className={classes.card}>
-            <CardMedia image={post.selectedFile} className={classes.media} />
-            <div className={classes.overlayContent}>
-                <div>
-                    <Typography>{post.creator}</Typography>
-                    <Typography>{moment(post.createdAt).fromNow()}</Typography>
+        <Card className={classes.card} raised elevation={6}>
+            <CardActionArea component={Link} to={`/posts/${post._id}`}>
+                <CardMedia image={post.selectedFile} className={classes.media} />
+                <div className={classes.overlayContent}>
+                    <div>
+                        <Typography>{post.creator}</Typography>
+                        <Typography>{moment(post.createdAt).fromNow()}</Typography>
+                    </div>
+                    <div>
+                        {(user?.googleId === post.creatorId ||
+                            user?._id === post.creatorId) && (
+                                <Button
+                                    className={classes.moreBtn}
+                                    onClick={(e) => updatePost(e, post._id)}
+                                >
+                                    <MoreHoriz fontSize="small" />
+                                </Button>
+                            )}
+                    </div>
                 </div>
-                <div>
-                    {(user?.googleId === post.creatorId ||
-                        user?._id === post.creatorId) && (
-                            <Button
-                                className={classes.moreBtn}
-                                onClick={() => setCurrentId(post._id)}
-                            >
-                                <MoreHoriz fontSize="small" />
-                            </Button>
-                        )}
+                <div className={classes.details}>
+                    <Typography variant="body2" color="textSecondary" component="h2">
+                        {post.tags.map((tag) => `#${tag} `)}
+                    </Typography>
                 </div>
-            </div>
-            <div className={classes.details}>
-                <Typography variant="body2" color="textSecondary" component="h2">
-                    {post.tags.map((tag) => `#${tag} `)}
-                </Typography>
-            </div>
-            <CardContent>
-                <Typography
-                    className={classes.title}
-                    variant="h5"
-                    gutterBottom
-                    component="h2"
-                >
-                    {post.title}
-                </Typography>
-                <Typography variant="body2" color="textSecondary" component="p">
-                    {post.message}
-                </Typography>
-            </CardContent>
+                <CardContent>
+                    <Typography
+                        className={classes.title}
+                        variant="h5"
+                        gutterBottom
+                        component="h2"
+                    >
+                        {post.title}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary" component="p">
+                        {post.message}
+                    </Typography>
+                </CardContent>
+            </CardActionArea>
             <CardActions className={classes.actions}>
                 <Button
                     color="primary"

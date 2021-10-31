@@ -6,7 +6,8 @@ import { Link } from "react-router-dom"
 import jwt_decode from "jwt-decode";
 
 import { removeUser } from "../../actions/auth";
-import memories from "../../images/memories.png";
+import memories from "../../images/memories-Logo.png";
+import memoriesText from "../../images/memories-Text.png";
 import useStyles from "./styles";
 
 const AppBarComponent = () => {
@@ -31,12 +32,13 @@ const AppBarComponent = () => {
   return (
     <AppBar position="static" color="inherit" className={classes.appBar}>
       <Toolbar className={classes.toolbar}>
-        <div className={classes.logo}>
-          <Typography variant="h2" component={Link} to='/' className={classes.heading}>
+        <Link className={classes.logo} to='/'>
+          {/* <Typography variant="h2" component={Link} to='/' className={classes.heading}>
             Memories
-          </Typography>
-          <img src={memories} alt="memories" height={60} />
-        </div>
+          </Typography> */}
+          <img src={memoriesText} alt="memoriesText" height={45} className={classes.heading} />
+          <img src={memories} alt="memories" height={40} />
+        </Link>
         <div className={classes.profile}>
           {user ? (
             <>

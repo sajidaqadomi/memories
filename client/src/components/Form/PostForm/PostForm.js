@@ -4,15 +4,16 @@ import { Button, Paper, Typography } from "@material-ui/core";
 import FileBase from "react-file-base64";
 import { useDispatch, useSelector } from "react-redux";
 
-import { createPost, updatePost } from "../../actions/posts";
+import { createPost, updatePost } from "../../../actions/posts";
 import useStyles from "./styles";
-import FormInput from "./FormInput";
+import FormInput from "../FormInput";
+import FormButton from "../FormButton";
+import { useHistory } from "react-router";
 
 const Form = ({ currentId, setCurrentId }) => {
     const authData = useSelector(state => state.authData)
-    const posts = useSelector((state) => state.posts);
-
-    console.log(authData, 'user')
+    const { posts } = useSelector((state) => state.posts);
+    const history = useHistory()
 
     const methods = useForm({
         defaultValues: {
@@ -61,13 +62,13 @@ const Form = ({ currentId, setCurrentId }) => {
 
     const onSubmit = (data) => {
         currentId
-            ? dispatch(updatePost(currentId, { ...data, creator: authData?.user?.name, tags: data.tags.split(",") }))
-            : dispatch(createPost({ ...data, creator: authData?.user?.name, tags: data.tags.split(",") }));
+            ? dispatch(updatePost(currentId, { ...data, creator: authData?.user?.name, tags: data.tags.split(",") }, history))
+            : dispatch(createPost({ ...data, creator: authData?.user?.name, tags: data.tags.split(",") }, history));
         clear();
     };
 
     if (!authData?.user?.name) return (
-        <Paper className={classes.paper}>
+        <Paper className={classes.paper} raised elevation={6}>
             <Typography variant='h6' align='center'>
                 Please Sign In to create your own memories and react with other's memories.
             </Typography>
@@ -75,7 +76,7 @@ const Form = ({ currentId, setCurrentId }) => {
     )
 
     return (
-        <Paper variant="elevation" className={classes.paper}>
+        <Paper variant="elevation" className={classes.paper} raised elevation={6}>
             <FormProvider {...methods}>
                 <form
                     onSubmit={methods.handleSubmit(onSubmit)}
@@ -97,16 +98,12 @@ const Form = ({ currentId, setCurrentId }) => {
                         />
                     </div>
 
-                    <Button
+                    <FormButton
                         className={classes.buttonSubmit}
-                        variant="contained"
-                        color="primary"
-                        size="large"
                         type="submit"
-                        fullWidth
                     >
                         Submit
-                    </Button>
+                    </FormButton>
                     <Button
                         className={classes.buttonSubmit}
                         variant="contained"
