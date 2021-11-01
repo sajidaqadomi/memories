@@ -7,7 +7,7 @@ import useStyles from './styles'
 const RecommendedPost = ({ post: { title, message, creator, likes, selectedFile, _id } }) => {
     const classes = useStyles()
     return (
-        <Paper className={classes.card} component={Link} to={`/posts/${_id}`} raised elevation={3}>
+        <Paper className={classes.card} component={Link} to={`/posts/${_id}`} elevation={3}>
             <div >
                 <Typography gutterBottom variant='h6'>{title}</Typography>
                 <Typography gutterBottom variant='subtitle1'>{creator}</Typography>

@@ -4,7 +4,7 @@ export default makeStyles((theme) => ({
     card: {
         display: 'flex',
         [theme.breakpoints.down('sm')]: {
-            flexDirection: 'column',
+            flexDirection: 'column-reverse',
         }
 
     },
@@ -33,15 +33,19 @@ export default makeStyles((theme) => ({
         marginLeft: 20,
         borderRadius: 15,
         overflow: 'hidden',
-        maxWidth: 500,
-        maxHeight: 400,
+        width: '500px',
+        height: 400,
         [theme.breakpoints.down('sm')]: {
             marginLeft: 0,
-        },
-
-
-
+            width: '100%',
+            height: '100%',
+            maxHeight: '40vh'
+        }
     },
+
+
+
+
     img: {
         width: '100%',
         height: '100%',

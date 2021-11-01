@@ -4,19 +4,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 
 import { AppBar } from "./components";
-import { getPosts } from "./actions/posts";
-//import useStyles from "./styles";
+
 import { Auth, Home, PostDetails } from "./pages";
 import { retrieveUser } from "./actions/auth";
 
 function App() {
   const dispatch = useDispatch();
   const { token } = useSelector(state => state.authData)
-  // const classes = useStyles();
   const [currentId, setCurrentId] = useState(null);
 
   useEffect(() => {
-    // dispatch(getPosts());
     dispatch(retrieveUser())
   }, [dispatch]);
 

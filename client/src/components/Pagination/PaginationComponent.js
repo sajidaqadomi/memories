@@ -14,7 +14,7 @@ const PaginationComponent = ({ page }) => {
 
     useEffect(() => {
         dispatch(getPosts(page))
-    }, [page]);
+    }, [page, dispatch]);
     return (
         <Pagination
             classes={{ ul: classes.ul }}

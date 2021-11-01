@@ -24,7 +24,6 @@ const AppBarComponent = () => {
   useEffect(() => {
     if (token) {
       let decode = jwt_decode(token)
-      console.log(decode)
       if (decode.exp * 1000 < new Date().getTime()) logout()
     }
   }, [location, token]);
@@ -33,9 +32,6 @@ const AppBarComponent = () => {
     <AppBar position="static" color="inherit" className={classes.appBar}>
       <Toolbar className={classes.toolbar}>
         <Link className={classes.logo} to='/'>
-          {/* <Typography variant="h2" component={Link} to='/' className={classes.heading}>
-            Memories
-          </Typography> */}
           <img src={memoriesText} alt="memoriesText" height={45} className={classes.heading} />
           <img src={memories} alt="memories" height={40} />
         </Link>

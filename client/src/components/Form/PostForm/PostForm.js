@@ -68,7 +68,7 @@ const Form = ({ currentId, setCurrentId }) => {
     };
 
     if (!authData?.user?.name) return (
-        <Paper className={classes.paper} raised elevation={6}>
+        <Paper className={classes.paper} elevation={6}>
             <Typography variant='h6' align='center'>
                 Please Sign In to create your own memories and react with other's memories.
             </Typography>
@@ -76,7 +76,7 @@ const Form = ({ currentId, setCurrentId }) => {
     )
 
     return (
-        <Paper variant="elevation" className={classes.paper} raised elevation={6}>
+        <Paper variant="elevation" className={classes.paper} elevation={6}>
             <FormProvider {...methods}>
                 <form
                     onSubmit={methods.handleSubmit(onSubmit)}

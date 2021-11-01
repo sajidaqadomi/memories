@@ -61,7 +61,7 @@ const Auth = () => {
 
     return (
         <Container maxWidth="sm">
-            <Paper className={classes.paper} raised elevation={6}>
+            <Paper className={classes.paper} elevation={6}>
                 <Avatar className={classes.icon}>
                     <LockIcon />
                 </Avatar>

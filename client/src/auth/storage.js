@@ -71,4 +71,5 @@ const clearStorage = () => {
     }
 }
 
-export default { saveToken, saveUser, removeToken, removeUser, getToken, getUser, clearStorage }
+const storage = { saveToken, saveUser, removeToken, removeUser, getToken, getUser, clearStorage }
+export default storage

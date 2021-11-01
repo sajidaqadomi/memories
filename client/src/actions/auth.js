@@ -20,7 +20,7 @@ export const saveUser = (authData) => async (dispatch) => {
 export const signIn = (user) => async (dispatch) => {
     try {
         const { data } = await api.signIn(user)
-        console.log(data, 'signin')
+
 
         storage.saveToken(data.token)
         storage.saveUser(data.user)
@@ -37,10 +37,10 @@ export const signIn = (user) => async (dispatch) => {
 }
 
 export const signUp = (user) => async (dispatch) => {
-    console.log(user, 'signupuser')
+
     try {
         const { data } = await api.signUp(user)
-        /// console.log(data, 'signup')
+
 
         storage.saveToken(data.token)
         storage.saveUser(data.user)

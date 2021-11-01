@@ -8,7 +8,6 @@ const API = axios.create({ baseURL: url });
 
 API.interceptors.request.use((req) => {
     if (storage.getToken()) {
-        console.log(storage.getToken())
         req.headers.Authorization = `Bearer ${storage.getToken()}`;
     }
 
@@ -24,7 +23,6 @@ export const fetchPosts = (page) => {
 }
 
 export const fetchPostsBySearch = (searchQuery) => {
-    console.log(searchQuery, 'apisearch')
     return API.get(`/posts/search?searchQuery=${searchQuery.searchMemories || 'none'}&tags=${searchQuery.tags.join(',')}`)
 
 }
@@ -41,6 +39,10 @@ export const likePost = (id) => {
     return API.patch(`/posts/${id}/likePost`)
 }
 
+export const commentPost = (id, comment) => {
+    return API.post(`/posts/${id}/comment`, comment)
+}
+
 export const updatePost = (id, post) => {
     return API.patch(`/posts/${id}`, post)
 }
@@ -52,7 +54,6 @@ export const signIn = (user) => {
 }
 
 export const signUp = (user) => {
-    console.log(user, 'api')
     return API.post(`/user/signup`, user)
 
 }

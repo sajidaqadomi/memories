@@ -27,7 +27,6 @@ const Post = ({ post, setCurrentId }) => {
     const dispatch = useDispatch();
 
     const { user } = useSelector((state) => state.authData);
-    console.log(user, post, "in post");
 
     const deletePost = (id) => {
         dispatch(actions.deletePost(id));
@@ -38,7 +37,7 @@ const Post = ({ post, setCurrentId }) => {
     };
 
     const updatePost = (e, id) => {
-        console.log(e, id, "propegation")
+
         e.preventDefault()
         e.stopPropagation()
         setCurrentId(id)
@@ -49,7 +48,7 @@ const Post = ({ post, setCurrentId }) => {
         const likeIndex = post.likes.findIndex(
             (like) => like === user?._id || like === user?.googleId
         );
-        console.log(likeCount, likeIndex, 'countindex')
+
         if (likeCount >= 1) {
             return likeIndex >= 0 ? (
                 <> <ThumbUp fontSize="small" />&nbsp;
@@ -70,7 +69,7 @@ const Post = ({ post, setCurrentId }) => {
     return (
         <Card className={classes.card} raised elevation={6}>
             <CardActionArea component={Link} to={`/posts/${post._id}`}>
-                <CardMedia image={post.selectedFile} className={classes.media} />
+                <CardMedia image={post.selectedFile || 'https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png'} className={classes.media} />
                 <div className={classes.overlayContent}>
                     <div>
                         <Typography>{post.creator}</Typography>
