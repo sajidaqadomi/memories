@@ -1,14 +1,33 @@
 import axios from 'axios'
-import storage from '../auth/storage'
+import * as storage from '../utility/storage'
+import authStorage from '../auth/storage'
 
 
 const url = 'http://localhost:5000'
 //const url = 'https://memories-reac.herokuapp.com'
 const API = axios.create({ baseURL: url });
 
+const get = API.get//override get to support cache
+API.get = async (url, params, axiosConfig) => {
+    try {
+        const response = await get(url, params, axiosConfig);
+        if (response.data) {
+            storage.store(url, response.data)
+            return response
+        }
+        let data = storage.get(url)
+        return data ? ({ data }) : (response)
+    } catch (error) {
+        let data = storage.get(url)
+        return data ? ({ data }) : ({ message: error })
+
+    }
+
+}
+
 API.interceptors.request.use((req) => {
-    if (storage.getToken()) {
-        req.headers.Authorization = `Bearer ${storage.getToken()}`;
+    if (authStorage.getToken()) {
+        req.headers.Authorization = `Bearer ${authStorage.getToken()}`;
     }
 
     return req;
