@@ -1,59 +1,148 @@
-import { Button, Paper } from "@material-ui/core";
+import { Button, FormHelperText, Paper } from "@material-ui/core";
 import ChipInput from "material-ui-chip-input";
-import React from "react";
-import { Controller, FormProvider, useForm } from "react-hook-form";
+import React, { useEffect, useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
-import { getPostsBySearch } from "../../../actions/posts";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 
+import { getPostsBySearch } from "../../../actions/posts";
 import FormInput from "../FormInput";
 import useStyles from "./styles";
 
+var schema = yup.object().shape(
+    {
+        searchMemories: yup.string().when("tags", {
+            is: (tags) => !(tags && tags.length),
+            then: yup.string().required(),
+            otherwise: yup.string(),
+        }),
+
+        tags: yup
+            .array()
+            .of(yup.string())
+            .when("searchMemories", {
+                is: (searchMemories) => !searchMemories.trim(),
+                then: yup.array().of(yup.string()).min(1),
+                otherwise: yup.array().of(yup.string()),
+            }),
+    },
+    ["searchMemories", "tags"]
+); // <-- HERE!!!!!!!!
+
 const Search = () => {
-    const methodes = useForm();
+    const methodes = useForm({
+        resolver: yupResolver(schema),
+        mode: "onSubmit",
+        defaultValues: { searchMemories: "", tags: [] },
+    });
+
+    const {
+        handleSubmit,
+        register,
+        setValue,
+        reset,
+        formState: { errors },
+    } = methodes;
+
+    const [tags, setTags] = useState([]);
     const classes = useStyles();
     const dispatch = useDispatch();
-    const history = useHistory()
+    const history = useHistory();
+
+    useEffect(() => {
+        register("tags");
+    }, [register]);
+
+    useEffect(() => {
+        if (methodes && tags) {
+            setValue("tags", tags, { shouldTouch: true });
+        }
+    }, [tags]);
+
+    const handleAddChip = (chip) => {
+        setTags((tags) => [...tags, chip]);
+    };
+
+    const handleDeleteChip = (chip, index) => {
+        setTags((tags) => tags.filter((tag) => tag !== chip));
+    };
 
     const onsubmit = (data) => {
-        const { searchMemories, tags } = data
+        const { searchMemories, tags } = data;
 
         if (searchMemories.trim() || tags.length) {
-            dispatch(getPostsBySearch(data))
-            history.push(`/posts/search?searchQuery=${searchMemories || 'none'}&tags=${tags.join(',')}`)
+            setTags([]);
+            reset();
+            dispatch(getPostsBySearch(data));
+            history.push(
+                `/posts/search?searchQuery=${searchMemories || "none"}&tags=${tags.join(
+                    ","
+                )}`
+            );
+
+            // setTags([]);
         } else {
-            history.push(`/`)
+            history.push(`/`);
         }
     };
 
     return (
         <Paper elevation={6} className={classes.paper}>
             <FormProvider {...methodes}>
-                <FormInput name="searchMemories" label="Search Memories" defaultValue='' />
-                <Controller
+                <FormInput
+                    name="searchMemories"
+                    label="Search Memories"
+                    className={classes.input}
+                    showError={false}
+                />
+                <ChipInput
+                    name="tags"
+                    variant="outlined"
+                    label="Search Tags"
+                    fullWidth
+                    value={tags}
+                    onAdd={(chip) => handleAddChip(chip)}
+                    onDelete={(chip, index) => handleDeleteChip(chip, index)}
+                    error={!!errors["tags"]}
+                    // helperText={methodes.formState?.errors["tags"]?.message}
+                    classes={{ root: classes.input, helperText: classes.helperText }}
+                />
+                {errors?.tags && errors?.searchMemories && (
+                    <FormHelperText
+                        error={true}
+                        variant="outlined"
+                        className={classes.input}
+                    >
+                        Search must include at least 1 field
+                    </FormHelperText>
+                )}
+
+                {/* <Controller
                     control={methodes.control}
                     name="tags"
-                    defaultValue={[]}
-                    render={({ field: { onChange, onBlur, value } }) => (
+                    // defaultValue={[]}
+                    // rules={{ required: true }}
+                    render={({ field }) => (
                         <ChipInput
                             variant="outlined"
                             label="Search Tags"
                             fullWidth
                             className={classes.input}
-                            onChange={onChange}
-                        //value={value}
-                        //onBlur={onBlur}
-
+                            onChange={field.onChange}
+                            value={field.value}
+                        // defaultValue={[]}
+                        //  onBlur={field.onBlur}
 
                         />
                     )}
-                />
+                /> */}
                 <Button
                     fullWidth
                     variant="contained"
                     color="primary"
-                    onClick={methodes.handleSubmit(onsubmit)}
-
+                    onClick={handleSubmit(onsubmit)}
                 >
                     search
                 </Button>

@@ -27,7 +27,7 @@ const Comments = () => {
                 </Typography>
                 <div style={{ height: 200, overflowY: "auto", margin: 10 }}>
                     {comments?.map((comment) => (
-                        <Typography gutterBottom variant="subtitle1">
+                        <Typography gutterBottom variant="subtitle1" key={comment._id}>
                             <strong> {comment.creator}</strong> : {comment.comment}
                         </Typography>
                     ))}

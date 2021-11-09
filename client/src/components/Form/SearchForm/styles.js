@@ -7,6 +7,10 @@ export default makeStyles((theme) => ({
         borderRadius: 4,
 
     },
+    helperText: {
+        marginBottom: 0
+
+    },
     input: {
         margin: theme.spacing(1, 0, 1)
     }

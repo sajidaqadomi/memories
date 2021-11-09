@@ -3,11 +3,42 @@ import { FormProvider, useForm } from "react-hook-form";
 import { GoogleLogin } from "react-google-login";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
 import { Button, Grid, IconButton, InputAdornment } from "@material-ui/core";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 
 import FormInput from "../FormInput";
 import FormButton from "../FormButton";
 import { GoogleIcon } from "../..";
 import useStyles from "./styles";
+
+const schema = yup
+  .object({
+    firstName: yup.string().required(),
+    lastName: yup.string().required(),
+    emailAddress: yup.string().required().email(),
+    password: yup
+      .string()
+      .required()
+      .matches(
+        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+        "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character"
+      ),
+
+    repeatPassword: yup
+      .string()
+      .oneOf([yup.ref("password"), null], "passwords must match"),
+  })
+  .required();
+
+const signinSchema = yup
+  .object({
+    emailAddress: yup.string().required().email(),
+    password: yup
+      .string()
+      .required()
+
+  })
+  .required();
 
 const AuthForm = ({
   isSignUp,
@@ -17,7 +48,17 @@ const AuthForm = ({
   handleShowPassword,
   showPassword,
 }) => {
-  const methods = useForm();
+  const methods = useForm({
+    resolver: yupResolver(isSignUp ? schema : signinSchema),
+    mode: "onTouched",
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      emailAddress: "",
+      password: "",
+      repeatPassword: "",
+    },
+  });
   const classes = useStyles();
   return (
     <FormProvider {...methods}>

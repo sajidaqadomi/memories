@@ -1,14 +1,35 @@
 import React, { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { Button, Paper, Typography } from "@material-ui/core";
+import { Button, FormHelperText, Paper, Typography } from "@material-ui/core";
 import FileBase from "react-file-base64";
 import { useDispatch, useSelector } from "react-redux";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 
 import { createPost, updatePost } from "../../../actions/posts";
 import useStyles from "./styles";
 import FormInput from "../FormInput";
 import FormButton from "../FormButton";
 import { useHistory } from "react-router";
+//^data:image\/(?:gif|png|jpeg|bmp|webp)(?:;charset=utf-8)?;base64,(?:[A-Za-z0-9]|[+/])+={0,2}/g
+const schema = yup
+    .object({
+        title: yup.string().min(3, "Title_too_short").required(),
+        message: yup.string().min(6, "Message_too_short").required(),
+        tags: yup.string(),
+        selectedFile: yup.lazy((value) =>
+            /^data/.test(value)
+                ? yup.string().nullable()
+                    .trim()
+                    .matches(
+                        /^data:image\/(?:gif|png|jpeg|bmp|webp)(?:;charset=utf-8)?(;base64)?,([a-z0-9!$&',()*+;=\-._~:@/?%\s]*)$/i,
+
+                        'Must be a valid Image',
+                    )
+
+                : yup.string().nullable(true)
+        ),
+    }).required();
 
 const Form = ({ currentId, setCurrentId }) => {
     const authData = useSelector(state => state.authData)
@@ -16,24 +37,24 @@ const Form = ({ currentId, setCurrentId }) => {
     const history = useHistory()
 
     const methods = useForm({
+        resolver: yupResolver(schema),
+        mode: "onTouched",
         defaultValues: {
-
             title: "",
             message: "",
             tags: "",
             selectedFile: null,
         },
     });
-    const [selectedFile, setSelectedFile] = useState("");
+    //  const [selectedFile, setSelectedFile] = useState("");
 
     const dispatch = useDispatch();
     const classes = useStyles();
 
     useEffect(() => {
-        if (methods) {
-            methods.register("selectedFile", { value: selectedFile });
-        }
-    }, [selectedFile, methods]);
+        methods.register("selectedFile");
+
+    }, [methods.register]);
 
     useEffect(() => {
         if (currentId && posts) {
@@ -54,6 +75,12 @@ const Form = ({ currentId, setCurrentId }) => {
             }
         }
     }, [currentId, methods, posts]);
+
+    const handleSelectedFile = (base64) => {
+        // console.log(base64, 'base64')
+        // setSelectedFile(base64)
+        methods.setValue('selectedFile', base64, { shouldValidate: 'true', shouldDirty: 'true' })
+    }
 
     const clear = () => {
         methods.reset();
@@ -94,9 +121,21 @@ const Form = ({ currentId, setCurrentId }) => {
                         <FileBase
                             type="file"
                             multiple={false}
-                            onDone={({ base64 }) => setSelectedFile(base64)}
+                            onDone={({ base64 }) => handleSelectedFile(base64)}
                         />
+                        {
+                            methods.formState.errors?.selectedFile && (
+                                <FormHelperText
+                                    error={true}
+                                    variant="outlined"
+                                    className={classes.input}
+                                >
+                                    {methods.formState.errors?.selectedFile.message}
+                                </FormHelperText>
+                            )
+                        }
                     </div>
+
 
                     <FormButton
                         className={classes.buttonSubmit}
