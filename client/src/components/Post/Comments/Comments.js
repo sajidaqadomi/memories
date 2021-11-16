@@ -1,4 +1,4 @@
-import { Typography } from "@material-ui/core";
+import { Button, Typography } from "@material-ui/core";
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -10,12 +10,16 @@ const Comments = () => {
     const [comments, setComments] = useState([]);
     const { post } = useSelector((state) => state.posts);
     const { user } = useSelector((state) => state.authData);
+
     const commentRef = useRef();
+    const parentRef = useRef();
+
 
     useEffect(() => {
-        if (post) {
+        if (post.comments) {
             setComments(post.comments);
-            commentRef.current.scrollIntoView({ behavior: "smooth" });
+            // commentRef.current.scrollIntoView({ behavior: "smooth" });
+            parentRef.current.scrollTo(0, commentRef.current.offsetTop)
         }
     }, [post]);
 
@@ -25,10 +29,11 @@ const Comments = () => {
                 <Typography gutterBottom variant="h6">
                     Comments
                 </Typography>
-                <div style={{ height: 200, overflowY: "auto", margin: 10 }}>
+                <div style={{ height: 200, overflowY: "auto", margin: 10 }} ref={parentRef}>
                     {comments?.map((comment) => (
                         <Typography gutterBottom variant="subtitle1" key={comment._id}>
                             <strong> {comment.creator}</strong> : {comment.comment}
+
                         </Typography>
                     ))}
                     <div ref={commentRef}></div>
@@ -39,7 +44,7 @@ const Comments = () => {
                     <Typography gutterBottom variant="h6" className={classes.commentForm}>
                         Write comment
                     </Typography>
-                    <CommentForm />
+                    <CommentForm setComments={setComments} />
                 </>)}
             </div>
         </div>

@@ -8,6 +8,7 @@ import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
+import { Link } from "react-router-dom";
 
 import { getPost, getPostsBySearch } from "../../actions/posts";
 import Comments from "./Comments";
@@ -65,10 +66,12 @@ const Post = () => {
                         {post.title}
                     </Typography>
                     <Typography variant="h6" color="textSecondary">
-                        {post.tags.map((tag) => `#${tag} `)}
+                        {post.tags.map((tag) =>
+                            <Link to={`/tags/${tag}`} style={{ textDecoration: 'none', color: '#3f51b5' }}> #{tag} </Link>
+                        )}
                     </Typography>
                     <Typography variant="body1">{post.message}</Typography>
-                    <Typography variant="h6">Created by: {post.creator}</Typography>
+                    <Typography variant="h6">Created by: <Link style={{ textDecoration: 'none', color: '#3f51b5' }} to={`/creator/${post.creator}`}>{post.creator}</Link></Typography>
                     <Typography variant="body1">
                         {moment(post.createdAt).fromNow()}
                     </Typography>

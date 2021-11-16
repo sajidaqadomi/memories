@@ -1,20 +1,35 @@
-import { AUTH, LOGOUT, RETRIEV } from "../utility/actionTypes";
+import {
+    AUTH,
+    END_LOADING_AUTH,
+    ERROR_AUTH,
+    LOGOUT,
+    RETRIEV,
+    START_LOADING_AUTH,
+} from "../utility/actionTypes";
 
-
-export const authReducer = (authData = { token: null, user: null }, action) => {
-
+export const authReducer = (
+    authData = { token: null, user: null, isLoading: false, errorMessage: null },
+    action
+) => {
     switch (action.type) {
+        case ERROR_AUTH:
+            return { ...authData, errorMessage: action.payload };
+
+        case START_LOADING_AUTH:
+            return { ...authData, isLoading: true };
+
+        case END_LOADING_AUTH:
+            return { ...authData, isLoading: false };
+
         case AUTH:
-            return action.payload;
+            return { ...authData, ...action.payload };
 
         case LOGOUT:
-            return { token: null, user: null }
+            return { ...authData, token: null, user: null };
 
         case RETRIEV:
-            return action.payload
+            return { ...authData, ...action.payload };
         default:
-            return authData
-
+            return authData;
     }
-
-}
+};

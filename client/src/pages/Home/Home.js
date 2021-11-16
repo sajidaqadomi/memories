@@ -6,7 +6,7 @@ import { PostForm, SearchForm } from '../../components/Form';
 import useStyles from './styles'
 import { useLocation } from 'react-router';
 
-const Home = ({ currentId, setCurrentId }) => {
+const Home = () => {
     const classes = useStyles()
 
     const useQuery = () => {
@@ -26,11 +26,11 @@ const Home = ({ currentId, setCurrentId }) => {
                     spacing={2}
                 >
                     <Grid item xs={12} sm={6} md={9} >
-                        <Posts setCurrentId={setCurrentId} />
+                        <Posts />
                     </Grid>
                     <Grid item xs={12} sm={6} md={3}>
                         <SearchForm />
-                        <PostForm currentId={currentId} setCurrentId={setCurrentId} />
+                        <PostForm />
                         {(page && !searchQuery) && <Paper className={classes.pagination} elevation={6}>
                             <Pagination page={page} />
                         </Paper>}

@@ -7,26 +7,31 @@ import {
     CardMedia,
     Typography,
 } from "@material-ui/core";
-import React from "react";
+import React, { useContext } from "react";
 import {
     ThumbUp,
     ThumbUpAltOutlined,
     Delete,
     MoreHoriz,
 } from "@material-ui/icons";
-
+import { useLocation, useHistory } from "react-router-dom"
+import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 
 import useStyles from "./styles";
-import { useDispatch, useSelector } from "react-redux";
+
+
 import * as actions from "../../../actions/posts";
 import { Link } from "react-router-dom";
+import { UpdateContext } from "../../../contexts/UpdateContext";
 
-const Post = ({ post, setCurrentId }) => {
+const Post = ({ post }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
-
+    const location = useLocation();
+    const history = useHistory()
     const { user } = useSelector((state) => state.authData);
+    const { setCurrentId } = useContext(UpdateContext)
 
     const deletePost = (id) => {
         dispatch(actions.deletePost(id));
@@ -41,6 +46,8 @@ const Post = ({ post, setCurrentId }) => {
         e.preventDefault()
         e.stopPropagation()
         setCurrentId(id)
+
+        if (location.pathname.startsWith("/tags") || location.pathname.startsWith("/cretor")) history.push('/')
     }
 
     const Like = () => {

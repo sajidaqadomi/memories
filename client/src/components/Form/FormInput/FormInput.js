@@ -15,10 +15,10 @@ const FormInput = ({ name, defaultValue, label, showError = true, ...rest }) => 
                     label={label}
                     variant="outlined"
                     {...field}
-                    error={!!methods.formState?.errors[name]}
+                    error={showError && (!!methods.formState?.errors[name])}
                     helperText={showError && methods.formState?.errors[name]?.message}
                     // onChange={field.onChange}
-                    // onBlur={field.onBlur}
+                    //  onBlur={field.onBlur}
                     fullWidth
                     {...rest}
                 />

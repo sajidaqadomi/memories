@@ -1,8 +1,10 @@
 import storage from '../auth/storage'
-import { AUTH, LOGOUT, RETRIEV } from '../utility/actionTypes'
+import { AUTH, END_LOADING_AUTH, ERROR_AUTH, LOGOUT, RETRIEV, START_LOADING_AUTH } from '../utility/actionTypes'
 import * as api from '../api'
 
 export const saveUser = (authData) => async (dispatch) => {
+
+
     try {
         await storage.saveToken(authData.token)
         await storage.saveUser(authData.user)
@@ -18,19 +20,25 @@ export const saveUser = (authData) => async (dispatch) => {
 }
 
 export const signIn = (user) => async (dispatch) => {
+    dispatch({ type: START_LOADING_AUTH })
+    dispatch({ type: ERROR_AUTH, payload: null })
+
     try {
         const { data } = await api.signIn(user)
-
 
         storage.saveToken(data.token)
         storage.saveUser(data.user)
 
-
-        dispatch({ type: AUTH, payload: data })
+        dispatch({ type: AUTH, payload: { ...data } })
+        dispatch({ type: END_LOADING_AUTH })
+        dispatch({ type: ERROR_AUTH, payload: null })
 
     } catch (error) {
+        dispatch({ type: END_LOADING_AUTH })
+        dispatch({ type: ERROR_AUTH, payload: error.response.data.message })
 
-        console.log(error)
+
+
 
     }
 
@@ -41,15 +49,16 @@ export const signUp = (user) => async (dispatch) => {
     try {
         const { data } = await api.signUp(user)
 
-
         storage.saveToken(data.token)
         storage.saveUser(data.user)
 
-        dispatch({ type: AUTH, payload: data })
+        dispatch({ type: AUTH, payload: { ...data, errorMessage: null } })
 
     } catch (error) {
 
-        console.log(error.message, 'error')
+        console.log(error.response.data, 'error')
+        dispatch({ type: ERROR_AUTH, payload: error.message })
+
 
     }
 

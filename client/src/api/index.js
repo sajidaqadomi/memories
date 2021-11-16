@@ -41,6 +41,10 @@ export const fetchPosts = (page) => {
     return API.get(`/posts?page=${page}`)
 }
 
+export const fetchPostsByCreator = (creator) => {
+    return API.get(`posts/creator?name=${creator}`)
+}
+
 export const fetchPostsBySearch = (searchQuery) => {
     return API.get(`/posts/search?searchQuery=${searchQuery.searchMemories || 'none'}&tags=${searchQuery.tags.join(',')}`)
 
@@ -62,6 +66,14 @@ export const commentPost = (id, comment) => {
     return API.post(`/posts/${id}/comment`, comment)
 }
 
+export const updateComment = (id, commentId, comment) => {
+    return API.patch(`/posts/${id}/comment/${commentId}`, comment)
+}
+
+export const deleteComment = (id, commentId) => {
+    return API.delete(`/posts/${id}/comment/${commentId}`)
+}
+
 export const updatePost = (id, post) => {
     return API.patch(`/posts/${id}`, post)
 }
@@ -74,5 +86,10 @@ export const signIn = (user) => {
 
 export const signUp = (user) => {
     return API.post(`/user/signup`, user)
+
+}
+
+export const findEmail = (email) => {
+    return API.post(`/user/email`, { email })
 
 }

@@ -21,11 +21,10 @@ var schema = yup.object().shape(
 
         tags: yup
             .array()
-            .of(yup.string())
             .when("searchMemories", {
                 is: (searchMemories) => !searchMemories.trim(),
                 then: yup.array().of(yup.string()).min(1),
-                otherwise: yup.array().of(yup.string()),
+                otherwise: yup.array(),
             }),
     },
     ["searchMemories", "tags"]
@@ -43,8 +42,9 @@ const Search = () => {
         register,
         setValue,
         reset,
-        formState: { errors },
+        formState: { errors, dirtyFields },
     } = methodes;
+
 
     const [tags, setTags] = useState([]);
     const classes = useStyles();
@@ -57,7 +57,7 @@ const Search = () => {
 
     useEffect(() => {
         if (methodes && tags) {
-            setValue("tags", tags, { shouldTouch: true });
+            setValue("tags", tags, { shouldDirty: true });
         }
     }, [tags]);
 
@@ -105,7 +105,7 @@ const Search = () => {
                     value={tags}
                     onAdd={(chip) => handleAddChip(chip)}
                     onDelete={(chip, index) => handleDeleteChip(chip, index)}
-                    error={!!errors["tags"]}
+                    // error={!!errors["tags"]}
                     // helperText={methodes.formState?.errors["tags"]?.message}
                     classes={{ root: classes.input, helperText: classes.helperText }}
                 />

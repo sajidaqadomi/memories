@@ -7,7 +7,7 @@ import { commentPost } from '../../../actions/posts'
 import FormButton from '../FormButton'
 import FormInput from '../FormInput'
 
-const CommentForm = ({ postID }) => {
+const CommentForm = ({ postID, setComments }) => {
     const methodes = useForm({
         defaultValues: {
             comment: ''
@@ -31,7 +31,10 @@ const CommentForm = ({ postID }) => {
     }, [comment])
 
     const onSubmit = (data) => {
-        if (user) dispatch(commentPost(id, { creator: user.name, ...data }))
+        if (user) {
+            setComments((comments) => [...comments, { ...data, creator: user.name }])
+            dispatch(commentPost(id, { creator: user.name, ...data }))
+        }
         methodes.reset()
         setDisable(true)
 
