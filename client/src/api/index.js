@@ -66,12 +66,12 @@ export const commentPost = (id, comment) => {
     return API.post(`/posts/${id}/comment`, comment)
 }
 
-export const updateComment = (id, commentId, comment) => {
-    return API.patch(`/posts/${id}/comment/${commentId}`, comment)
+export const updateComment = (commentId, comment) => {
+    return API.patch(`/posts/comment/${commentId}`, comment)
 }
 
-export const deleteComment = (id, commentId) => {
-    return API.delete(`/posts/${id}/comment/${commentId}`)
+export const deleteComment = (commentId) => {
+    return API.delete(`/posts/comment/${commentId}`)
 }
 
 export const updatePost = (id, post) => {

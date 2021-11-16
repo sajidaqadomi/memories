@@ -1,18 +1,18 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { Button, FormHelperText, Paper, Typography } from "@material-ui/core";
 import FileBase from "react-file-base64";
 import { useDispatch, useSelector } from "react-redux";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { useHistory } from "react-router";
 
 import { createPost, updatePost } from "../../../actions/posts";
 import useStyles from "./styles";
 import FormInput from "../FormInput";
 import FormButton from "../FormButton";
-import { useHistory } from "react-router";
 import { UpdateContext } from "../../../contexts/UpdateContext";
-//^data:image\/(?:gif|png|jpeg|bmp|webp)(?:;charset=utf-8)?;base64,(?:[A-Za-z0-9]|[+/])+={0,2}/g
+
 const schema = yup
     .object({
         title: yup.string().min(3, "Title_too_short").required(),

@@ -17,7 +17,7 @@ const Auth = () => {
     const [showPassword, setShowPassword] = useState(false);
 
     const switchSignup = (e) => {
-        console.log('click')
+        // console.log('click')
         //  e.preventDefault()
         e.stopPropagation()
         setIsSignUp((signup) => !signup);

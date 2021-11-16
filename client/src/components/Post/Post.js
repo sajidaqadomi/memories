@@ -67,7 +67,7 @@ const Post = () => {
                     </Typography>
                     <Typography variant="h6" color="textSecondary">
                         {post.tags.map((tag) =>
-                            <Link to={`/tags/${tag}`} style={{ textDecoration: 'none', color: '#3f51b5' }}> #{tag} </Link>
+                            <Link key={tag} to={`/tags/${tag}`} style={{ textDecoration: 'none', color: '#3f51b5' }}> #{tag} </Link>
                         )}
                     </Typography>
                     <Typography variant="body1">{post.message}</Typography>

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
-import { Container, Typography, Divider, Grid } from '@material-ui/core'
+import { Container, Typography, Divider } from '@material-ui/core'
 import { useParams, useLocation } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { getPostsByCreator, getPostsBySearch } from '../../actions/posts'
 import Posts from '../../components/Posts/Posts'
 

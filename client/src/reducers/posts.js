@@ -1,19 +1,32 @@
-import { COMMENT, CREATE, DELETE, END_LOADING, FETCH_ALL, FETCH_BY_CREATOR, FETCH_BY_SEARCH, FETCH_POST, LIKE, START_LOADING, UPDATE } from "../utility/actionTypes";
+import {
+    COMMENT,
+    CREATE,
+    DELETE,
+    DELETE_COMMENT,
+    END_LOADING,
+    FETCH_ALL,
+    FETCH_BY_CREATOR,
+    FETCH_BY_SEARCH,
+    FETCH_POST,
+    LIKE,
+    START_LOADING,
+    UPDATE,
+    UPDATE_COMMENT,
+} from "../utility/actionTypes";
 
 export const reducer = (state = { isLoading: true, posts: [] }, action) => {
-
     switch (action.type) {
         case START_LOADING:
-            return { ...state, isLoading: true }
+            return { ...state, isLoading: true };
 
         case END_LOADING:
-            return { ...state, isLoading: false }
+            return { ...state, isLoading: false };
 
         case FETCH_ALL:
             return { ...state, ...action.payload };
 
         case FETCH_POST:
-            return { ...state, post: action.payload }
+            return { ...state, post: action.payload };
 
         case FETCH_BY_SEARCH:
             return { ...state, posts: action.payload };
@@ -22,23 +35,80 @@ export const reducer = (state = { isLoading: true, posts: [] }, action) => {
             return { ...state, posts: action.payload };
 
         case COMMENT:
-            return { ...state, posts: state.posts.map(post => post._id === action.payload._id ? (action.payload) : (post)), post: action.payload }
+            return {
+                ...state,
+                posts: state.posts.map((post) =>
+                    post._id === action.payload._id ? action.payload : post
+                ),
+                post: action.payload,
+            };
+
+        case UPDATE_COMMENT:
+            return {
+                ...state,
+                posts: state.posts.map((post) =>
+                    post.comments.findIndex(
+                        (comment) => comment._id === action.payload_id
+                    )
+                        ? {
+                            ...post,
+                            comments: post.comments.map((comment) =>
+                                comment._id === action.payload._id ? action.payload : comment
+                            ),
+                        }
+                        : post
+                ),
+                post: {
+                    ...state.post,
+                    comments: state.post.comments.map((comment) =>
+                        comment._id === action.payload._id ? action.payload : comment
+                    ),
+                },
+            };
+
+        case DELETE_COMMENT:
+            return {
+                ...state,
+                posts: state.posts.map((post) => ({
+                    ...post,
+                    comments: post.comments.filter(
+                        (comment) => comment._id !== action.payload
+                    ),
+                })),
+                post: {
+                    ...state.post,
+                    comments: state.post.comments.filter(
+                        (comment) => comment._id !== action.payload
+                    ),
+                },
+            };
 
         case CREATE:
             return { ...state, posts: [...state.posts, action.payload] };
 
         case DELETE:
-            return { ...state, posts: state.posts.filter(post => post._id !== action.payload._id) };
+            return {
+                ...state,
+                posts: state.posts.filter((post) => post._id !== action.payload._id),
+            };
 
         case LIKE:
-            return { ...state, posts: state.posts.map(post => post._id === action.payload._id ? (action.payload) : (post)) };
+            return {
+                ...state,
+                posts: state.posts.map((post) =>
+                    post._id === action.payload._id ? action.payload : post
+                ),
+            };
 
         case UPDATE:
-            return { ...state, posts: state.posts.map(post => post._id === action.payload._id ? action.payload : post) }
+            return {
+                ...state,
+                posts: state.posts.map((post) =>
+                    post._id === action.payload._id ? action.payload : post
+                ),
+            };
 
         default:
-            return state
-
+            return state;
     }
-
-}
+};

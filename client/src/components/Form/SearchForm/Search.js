@@ -42,7 +42,7 @@ const Search = () => {
         register,
         setValue,
         reset,
-        formState: { errors, dirtyFields },
+        formState: { errors },
     } = methodes;
 
 

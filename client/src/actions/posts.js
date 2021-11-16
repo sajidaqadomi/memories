@@ -3,6 +3,7 @@ import {
     COMMENT,
     CREATE,
     DELETE,
+    DELETE_COMMENT,
     END_LOADING,
     FETCH_ALL,
     FETCH_BY_CREATOR,
@@ -11,6 +12,7 @@ import {
     LIKE,
     START_LOADING,
     UPDATE,
+    UPDATE_COMMENT,
 } from "../utility/actionTypes";
 
 export const getPost = (id) => async (dispatch) => {
@@ -47,7 +49,7 @@ export const getPostsByCreator = (creator) => async (dispatch) => {
         dispatch({ type: END_LOADING });
     } catch (error) {
         console.log(error);
-        dispatch({ type: END_LOADING })
+        dispatch({ type: END_LOADING });
     }
 };
 
@@ -110,6 +112,26 @@ export const updatePost = (id, post) => async (dispatch) => {
     try {
         const { data } = await api.updatePost(id, post);
         dispatch({ type: UPDATE, payload: data });
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const updateComment = (id, comment) => async (dispatch) => {
+    try {
+        const { data } = await api.updateComment(id, comment);
+
+        dispatch({ type: UPDATE_COMMENT, payload: data });
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const deleteComment = (id) => async (dispatch) => {
+    try {
+        const { data } = await api.deleteComment(id);
+
+        dispatch({ type: DELETE_COMMENT, payload: id });
     } catch (error) {
         console.log(error);
     }

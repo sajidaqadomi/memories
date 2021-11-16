@@ -1,5 +1,5 @@
 //i have issue with mode on touch and click
-import React, { useEffect, useLayoutEffect } from "react";
+import React, { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { GoogleLogin } from "react-google-login";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
@@ -73,12 +73,10 @@ const signinSchema = yup
   })
   .required();
 
-
-
 const AuthForm = ({ isSignUp, handleShowPassword, showPassword }) => {
   const methods = useForm({
     resolver: yupResolver(isSignUp ? schema : signinSchema),
-    mode: 'onSubmit',
+    mode: "onSubmit",
     defaultValues: isSignUp
       ? {
         firstName: "",
@@ -102,7 +100,6 @@ const AuthForm = ({ isSignUp, handleShowPassword, showPassword }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log("efffect", "errrrrrr", isSignUp);
     methods.reset();
     methods.clearErrors([]);
   }, [isSignUp]);
@@ -117,7 +114,6 @@ const AuthForm = ({ isSignUp, handleShowPassword, showPassword }) => {
   };
 
   const googleFailure = (err) => {
-    // console.log("Google Sign In was unseccessful.Try Again Later", err); //dispatch
     dispatch({ type: ERROR_AUTH, payload: err.error });
   };
 
@@ -138,7 +134,7 @@ const AuthForm = ({ isSignUp, handleShowPassword, showPassword }) => {
 
   return (
     <>
-      {console.log("rendeer")}
+
       <Toast
         message={errorMessage}
         type="error"

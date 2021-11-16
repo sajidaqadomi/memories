@@ -1,52 +1,77 @@
-import React, { useEffect, useState } from 'react'
-import { FormProvider, useForm } from 'react-hook-form'
-import { useDispatch, useSelector } from 'react-redux'
+import React, { useEffect, useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 
-import { commentPost } from '../../../actions/posts'
-import FormButton from '../FormButton'
-import FormInput from '../FormInput'
+import * as actions from "../../../actions/posts";
+import FormButton from "../FormButton";
+import FormInput from "../FormInput";
 
-const CommentForm = ({ postID, setComments }) => {
+const CommentForm = ({ setComments, updateComment, setUpdateComment }) => {
     const methodes = useForm({
         defaultValues: {
-            comment: ''
-        }
-    })
-    const { user } = useSelector(state => state.authData)
+            comment: "",
+        },
+    });
+    const { user } = useSelector((state) => state.authData);
     const [disable, setDisable] = useState(true);
-    const dispatch = useDispatch()
-    const { id } = useParams()
+    const dispatch = useDispatch();
+    const { id } = useParams();
 
-    let [comment] = methodes.watch(['comment'])
-    console.log(comment.trim(), 'watch')
+    let [comment] = methodes.watch(["comment"]);
 
     useEffect(() => {
         if (comment.trim()) {
-            setDisable(false)
+            setDisable(false);
         } else {
-            setDisable(true)
+            setDisable(true);
         }
+    }, [comment]);
 
-    }, [comment])
+    useEffect(() => {
+        if (updateComment) {
+            methodes.setValue("comment", updateComment.comment, {
+                shouldDirty: true,
+            });
+        }
+    }, [updateComment]);
 
     const onSubmit = (data) => {
         if (user) {
-            setComments((comments) => [...comments, { ...data, creator: user.name }])
-            dispatch(commentPost(id, { creator: user.name, ...data }))
+            updateComment
+                ? setComments((comments) => {
+                    return comments.map((comment) =>
+                        comment._id === updateComment.id
+                            ? { ...comment, comment: data.comment }
+                            : comment
+                    );
+                })
+                : setComments((comments) => [
+                    ...comments,
+                    { ...data, creator: user.name },
+                ]);
+            updateComment
+                ? dispatch(actions.updateComment(updateComment.id, { ...data }))
+                : dispatch(actions.commentPost(id, { creator: user.name, ...data }));
         }
-        methodes.reset()
-        setDisable(true)
+        methodes.reset();
+        setUpdateComment("");
+        setDisable(true);
+    };
 
-    }
     return (
         <FormProvider {...methodes}>
-            <form >
-                <FormInput name='comment' label='comment' multiline rows={4} required />
-                <FormButton disabled={disable} onClick={methodes.handleSubmit(onSubmit)}>Comment</FormButton>
+            <form>
+                <FormInput name="comment" label="comment" multiline rows={4} required />
+                <FormButton
+                    disabled={disable}
+                    onClick={methodes.handleSubmit(onSubmit)}
+                >
+                    {updateComment ? "Update" : "Comment"}
+                </FormButton>
             </form>
         </FormProvider>
-    )
-}
+    );
+};
 
-export default CommentForm
+export default CommentForm;

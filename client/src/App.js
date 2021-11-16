@@ -1,10 +1,9 @@
 import { Container } from "@material-ui/core";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 
 import { AppBar } from "./components";
-
 import { Auth, Home, PostDetails } from "./pages";
 import { retrieveUser } from "./actions/auth";
 import storage from "./auth/storage";
@@ -13,10 +12,9 @@ import UpdateContextProvider from "./contexts/UpdateContext";
 
 function App() {
   const dispatch = useDispatch();
-  const [currentId, setCurrentId] = useState(null);
 
   useEffect(() => {
-    dispatch(retrieveUser())
+    dispatch(retrieveUser());
   }, [dispatch]);
 
   return (
@@ -26,12 +24,22 @@ function App() {
           <AppBar />
         </Container>
         <Switch>
-          <Route exact path='/' component={() => <Redirect to='/posts' />} />
-          <Route exact path='/posts' component={() => <Home />} />
-          <Route exact path='/posts/search' component={() => <Home />} />
-          <Route exact path={['/creator/:name', '/tags/:name']} component={() => <ProfileTag />} />
-          <Route exact path='/posts/:id' component={() => <PostDetails />} />
-          <Route exact path='/auth' component={() => (!storage.getToken() ? <Auth /> : <Redirect to='/' />)} />
+          <Route exact path="/" component={() => <Redirect to="/posts" />} />
+          <Route exact path="/posts" component={() => <Home />} />
+          <Route exact path="/posts/search" component={() => <Home />} />
+          <Route
+            exact
+            path={["/creator/:name", "/tags/:name"]}
+            component={() => <ProfileTag />}
+          />
+          <Route exact path="/posts/:id" component={() => <PostDetails />} />
+          <Route
+            exact
+            path="/auth"
+            component={() =>
+              !storage.getToken() ? <Auth /> : <Redirect to="/" />
+            }
+          />
         </Switch>
       </UpdateContextProvider>
     </BrowserRouter>
