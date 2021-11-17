@@ -47,12 +47,8 @@ const Comments = () => {
                     {comments.length ? comments.map((comment) => (
                         <div
                             key={comment._id}
-                            style={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                alignItems: "center",
-                                margin: "8px 0 8px 0",
-                            }}
+                            className={classes.commentContent}
+
                         >
                             <Typography gutterBottom variant="subtitle1" style={{ flex: 1 }}>
                                 <strong> {comment.creator}</strong> : {comment.comment}
@@ -65,7 +61,8 @@ const Comments = () => {
                                             color="primary"
                                             size="small"
                                             onClick={() => handleUpdate(comment._id, comment.comment)}
-                                            style={{ margin: "0 8px" }}
+                                            className={classes.button}
+
                                         >
                                             UPDATE
                                         </Button>
@@ -74,7 +71,7 @@ const Comments = () => {
                                             size="small"
                                             color="secondary"
                                             onClick={() => handleDelete(comment._id)}
-                                            style={{ margin: "0 8px" }}
+
                                         >
                                             DELETE
                                         </Button>

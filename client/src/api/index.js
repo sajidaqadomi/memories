@@ -3,8 +3,8 @@ import * as storage from '../utility/storage'
 import authStorage from '../auth/storage'
 
 
-const url = 'http://localhost:5000'
-//const url = 'https://memories-reac.herokuapp.com'
+//const url = 'http://localhost:5000'
+const url = 'https://memories-reac.herokuapp.com'
 const API = axios.create({ baseURL: url });
 
 const get = API.get//override get to support cache
